@@ -100,6 +100,17 @@ public class BInvokeVirtual extends BInstruction {
 		System.out.println("Next called Method is " + nextMethod.getName());
 		return nextMethod;
 	}
+	
+	public BMethod getNextMethod(ArrayList<BMethod> methodList) {
+
+		for (int count = 0; count < methodList.size(); count ++) {
+			if (methodList.get(count).getName().equals(this.name) ) {
+				System.out.println("Next called Method is " + methodList.get(count).getName());
+				return methodList.get(count);
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public int getOpcode() {

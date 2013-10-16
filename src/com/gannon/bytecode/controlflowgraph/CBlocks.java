@@ -1,8 +1,6 @@
 package com.gannon.bytecode.controlflowgraph;
 
 import java.util.*;
-
-import com.gannon.jvm.instructions.BInstruction;
 import com.gannon.jvm.instructions.BPredicateInstruction;
 
 public class CBlocks {
@@ -77,7 +75,8 @@ public class CBlocks {
 		int nodeId = 0;
 		Set<CNode> nodes = new HashSet<CNode>();
 		for (CBlock block : blocks) {
-			nodes.add(new CNode(nodeId++, block));
+			//nodes.add(new CNode(nodeId++, block));
+			nodes.add(new CNode(nodeId++, methodName, block));
 		}
 		return nodes;
 	}

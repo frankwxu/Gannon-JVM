@@ -1,4 +1,4 @@
-package com.ganon.jvm.shared;
+package com.gannon.jvm.shared;
 
 import java.util.Stack;
 

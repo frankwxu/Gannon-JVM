@@ -30,6 +30,7 @@ import javax.swing.tree.TreeSelectionModel;
 import com.gannon.asm.classgenerator.BClassGenerator;
 import com.gannon.asm.components.BClass;
 import com.gannon.asm.components.BMethod;
+import com.gannon.bytecode.controlflowgraph.BuildCFG;
 import com.gannon.bytecode.controlflowgraph.CFGMethod;
 import com.gannon.bytecode.controlflowgraph.CGraph;
 import com.gannon.bytecode.controlflowgraph.CPath;
@@ -230,8 +231,20 @@ public class MethodTreePanel extends JScrollPane implements TreeSelectionListene
 							showCFGTab(clickedMethodNode);
 						}
 					});
+					
+					JMenuItem CFGMenuItem2 = new JMenuItem("Resultant CFG");
+					CFGMenuItem2.setIcon(new ImageIcon(Main.class
+							.getResource(COM_GANNON_IMAGES16X16_FLOW_CHART_PNG)));
+					CFGMenuItem2.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							showResultantCFGTab(clickedMethodNode);
+						}
+					});
 
 					methodPopMenu.add(CFGMenuItem);
+					methodPopMenu.add(CFGMenuItem2);
 					methodPopMenu.show(tree, e.getX(), e.getY());
 
 				} else if (path.getPathCount() == ConstantsUtility.TESTPATH_LEVEL) {
@@ -348,6 +361,22 @@ public class MethodTreePanel extends JScrollPane implements TreeSelectionListene
 
 		CFGMethod m = new CFGMethod(selectedMethod);
 		CGraph buildGraph = m.buildGraph();
+		// need to change this
+		buildGraph.processDominatorNodes();
+		// switch tab
+		mainFrame.scrollPaneCFG.setViewportView(new CFGPanel(buildGraph, 200, 400));
+	}
+	
+	private void showResultantCFGTab(final DefaultMutableTreeNode clickedMethodNode) {
+		BMethod selectedMethod = myclass.getMethod(clickedMethodNode.toString());
+
+		Icon icon = new ImageIcon(Main.class.getResource(COM_GANNON_IMAGES16X16_FLOW_CHART_PNG));
+		TabComponent.addClosableTab(mainFrame.tabbedPane, mainFrame.scrollPaneCFG, "CFG", icon);
+
+		//CFGMethod m = new CFGMethod(selectedMethod);
+		BuildCFG m = new BuildCFG(myclass.getMethods(), selectedMethod);
+		//CGraph buildGraph = m.buildGraph();
+		CGraph buildGraph = m.getResultGraph();
 		// need to change this
 		buildGraph.processDominatorNodes();
 		// switch tab

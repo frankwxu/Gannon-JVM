@@ -41,6 +41,7 @@ public class NodeData {
     private boolean isRoot = false;
     private double mass = 1.0;
     private String label;
+    private String mName;
 
     public NodeData() {
     }
@@ -96,6 +97,10 @@ public class NodeData {
     public String getLabel() {
         return label;
     }
+    
+    public String getmName() {
+        return mName;
+    }
 
     /**
      * @return the labelColor
@@ -123,6 +128,11 @@ public class NodeData {
      */
     public NodeData label(String label) {
         this.label = label;
+        return this;
+    }
+    
+    public NodeData mName(String mName) {
+        this.mName = mName;
         return this;
     }
 

@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 import com.gannon.asm.classgenerator.BClassGenerator;
 import com.gannon.asm.components.BClass;
 import com.gannon.asm.components.BMethod;
+import com.gannon.bytecode.controlflowgraph.BuildCFG;
 import com.gannon.bytecode.controlflowgraph.CFGMethod;
 import com.gannon.bytecode.controlflowgraph.CGraph;
 import com.gannon.bytecode.controlflowgraph.CPath;
@@ -212,7 +213,7 @@ public class Main extends JFrame {
 					scrollPaneTree = new MethodTreePanel(Main.this, file.getName());
 					populateTree(scrollPaneTree);
 					splitPaneRoot.setLeftComponent(scrollPaneTree);
-					revalidate();
+					//revalidate();
 					repaint();
 
 					// save the path to a file
@@ -273,6 +274,7 @@ public class Main extends JFrame {
 	/*
 	 * create sample CGraph for testing purpose
 	 */
+	/*
 	public CGraph createSampleCGraph() {
 		String inputText = "start_node end_nodes\n" + "0 1 3\n" + "1 3\n" + "2\n" + "3 5 20\n" + "4 6 7\n"
 				+ "5 10 11\n" + "6 8 9\n" + "7 16\n" + "8\n" + "9 4\n" + "10 12\n" + "11\n" + "12 11 13\n"
@@ -283,4 +285,5 @@ public class Main extends JFrame {
 
 		return cGraph;
 	}
+	*/
 }

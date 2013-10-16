@@ -1,10 +1,9 @@
 package com.gannon.bytecode.controlflowgraph;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.gannon.jvm.instructions.BInstruction;
 import com.gannon.jvm.utilities.ConstantsUtility;
@@ -15,7 +14,7 @@ public class CPath {
 	private List<CNode> nodes = new LinkedList<CNode>();
 	//store expected predicate result, such as True or False
 	//its value is already set when we build the path
-	private Set<CEdge> edges = new HashSet<CEdge>();;
+	private LinkedHashSet<CEdge> edges = new LinkedHashSet<CEdge>();;
 
 	public CPath(int id) {
 		super();
@@ -50,11 +49,11 @@ public class CPath {
 		this.nodes.add(nodes);
 	}
 
-	public Set<CEdge> getEdges() {
+	public LinkedHashSet<CEdge> getEdges() {
 		return edges;
 	}
 
-	public void setEdges(Set<CEdge> edges) {
+	public void LinkedHashSet(LinkedHashSet<CEdge> edges) {
 		this.edges = edges;
 	}
 
@@ -76,7 +75,7 @@ public class CPath {
 	}
 
 	public CGraph convertToGraph() {
-		Set<CNode> nodeSet = new HashSet<CNode>(nodes);
+		LinkedHashSet<CNode> nodeSet = new LinkedHashSet<CNode>(nodes);
 		return new CGraph(nodeSet, edges);
 	}
 

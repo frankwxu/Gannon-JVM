@@ -1,9 +1,10 @@
 package com.gannon.bytecode.controlflowgraph;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.Stack;
+
 import com.gannon.asm.components.BMethod;
+import com.gannon.jvm.instructions.BInvokeVirtual;
 
 
 // the class has not been tested.
@@ -34,20 +35,26 @@ public class BuildCFG {
 			int blockId = currentFrame.getBlockId();
 			for (int i = blockId; i < currentBlocks.size(); i++) {
 				// always point to next block
-				CNode b = currentBlocks.get(i); 
-				if (b.hasInvoke()) { 
-					String methodName = currentFrame.getMethod().getName();
+				CNode b = currentBlocks.get(i);
+				
+				if (b.hasInvoke()) {
+					currentFrame.setBlockId(i + 1);
+					BInvokeVirtual ivInstruction = (BInvokeVirtual) b.getBlock().getFirstInstruction();
+					
 					// It will give the name including MethodNAme, Desc etc.
 
-
-					BMethod calleeMethod = getCurrentMethod(methodName);
+					BMethod calleeMethod = ivInstruction.getNextMethod(this.methods);//getCurrentMethod(methodName);
+					
 					if (calleeMethod != null) {
-						currentFrame.setBlockId(i + 1);
+						//currentFrame.setBlockId(i + 1);
 						Frame calleeFrame = new Frame(calleeMethod, 0);
 						stack.push(calleeFrame);
 						CFGMethod calleeCfgMethod = new CFGMethod(calleeMethod);
+						
 						CGraph calleeMethodGraph =calleeCfgMethod.buildGraph();
 						resultGraph.mergeCallingGraph(calleeMethodGraph, b);
+						System.out.print(resultGraph.printNodesToString());
+						System.out.print(resultGraph.printEdgesToString());
 						currentFrame = calleeFrame;
 					}
 					break;
@@ -61,15 +68,5 @@ public class BuildCFG {
 			}
 		}
 		return resultGraph;
-	}
-
-	public BMethod getCurrentMethod(String mName) {
-		for (int i = 0; i < methods.size(); i++) {
-			String methodName = methods.get(i).getName();
-			if (methodName.endsWith(mName)) {
-				return methods.get(i);
-			}
-		}
-		return null;
 	}
 }

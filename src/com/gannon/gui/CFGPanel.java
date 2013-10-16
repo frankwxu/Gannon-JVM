@@ -3,6 +3,7 @@ package com.gannon.gui;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,10 +29,10 @@ public class CFGPanel extends GraphPanel {
     private CGraph cGraph;    // contains list of cfg node
     CNode rootNode;  // root node of the cfg tree
 
-    public Node findNode(int nodeID) {
+    public Node findNode(int nodeID, String methodName) {
         for (int i = 0; i < listOfNodes.size(); i++) {
             Node node = listOfNodes.get(i);
-            if (node.getData().getLabel().equals( String.valueOf(nodeID))) {
+            if (node.getData().getLabel().equals( String.valueOf(nodeID)) && node.getData().getmName().equals(methodName)) {
                 return node;
             }
         }
@@ -42,11 +43,11 @@ public class CFGPanel extends GraphPanel {
 
     public void drawCFGTree() {
         // getting list of nodes and adding them to the graph
-        Set<CNode> listOfCNodes =cGraph.getCNodes();
+    	LinkedHashSet<CNode> listOfCNodes =cGraph.getCNodes();
         for (Iterator<CNode> iterator = listOfCNodes.iterator(); iterator.hasNext(); ) {
         	CNode nodeToInsert =  iterator.next();
         	//adding tnode to graph panel
-            Node newNode = addNode( String.valueOf( nodeToInsert.getId()), Color.BLACK, Color.GREEN, Color.BLUE, 20.0f);
+            Node newNode = addNode( String.valueOf( nodeToInsert.getId()), nodeToInsert.getMethodName(),Color.BLACK, Color.GREEN, Color.BLUE, 20.0f);
             // adding new node to listOfNodes
             listOfNodes.add(newNode);
         }
@@ -55,7 +56,7 @@ public class CFGPanel extends GraphPanel {
         for (Iterator<CNode> iterator = listOfCNodes.iterator(); iterator.hasNext(); ) {
         	CNode parentNode =  iterator.next();
             // getting node from listOfNodes
-            Node node = findNode(parentNode.getId());
+            Node node = findNode(parentNode.getId(), parentNode.getMethodName());
 
             // getting list of child node for tnode
             List<CNode> listOfChildNodes =  cGraph.getAdjacentNodes(parentNode);// .getAdjacentNodes(tnode);
@@ -68,7 +69,7 @@ public class CFGPanel extends GraphPanel {
             	CEdgeValue value = cGraph.getCEdgeValue(parentNode, childNode);
             	
             	// getting node from listOfNodes
-                Node graphNode = findNode(childNode.getId());
+                Node graphNode = findNode(childNode.getId(), childNode.getMethodName());
                 
                 CPath longestPath =  cGraph.getLongestPath(parentNode,childNode);
                 
@@ -97,7 +98,7 @@ public class CFGPanel extends GraphPanel {
         }
 
         // setting root node flag for the root node
-        findNode(rootNode.getId()).getData().setIsRoot(true);
+        findNode(rootNode.getId(), rootNode.getMethodName()).getData().setIsRoot(true);
     }
 
     public CFGPanel(CGraph cGraph, int width,int height) {
@@ -140,7 +141,7 @@ public class CFGPanel extends GraphPanel {
     	String edgeLabel="";
     	
     	// creating invicible node        
-        Node invicibleNode = addInvicibleNode("", Color.BLACK, Color.BLACK, Color.WHITE, 1);
+        Node invicibleNode = addInvicibleNode("","", Color.BLACK, Color.BLACK, Color.WHITE, 1);
         
         // assigning edge value to label
         if(value != null)
@@ -161,7 +162,7 @@ public class CFGPanel extends GraphPanel {
         edgeLabel = "";
         
         for(int i=0;i<numberOfNodes-1;i++){
-            Node newInvicibleNode = addInvicibleNode("", Color.BLACK, Color.BLACK, Color.WHITE, 1);
+            Node newInvicibleNode = addInvicibleNode("", "", Color.BLACK, Color.BLACK, Color.WHITE, 1);
             
             // adding edge between the invicible node and the new invisible node 
             this.addEdge(invicibleNode, newInvicibleNode,
@@ -177,14 +178,14 @@ public class CFGPanel extends GraphPanel {
 
     }
     
-    public Node addNode(String label, Color labelColor, Color nodeColor, Color boxColor, float mass) {
-        final Node node = this.addNode(new NodeData().label(label).labelColor(labelColor)
+    public Node addNode(String label, String mName, Color labelColor, Color nodeColor, Color boxColor, float mass) {
+        final Node node = this.addNode(new NodeData().label(label).mName(mName).labelColor(labelColor)
                 .backgroundColor(nodeColor).boxColor(boxColor).mass(mass));
         return node;
     }
 
-    public Node addInvicibleNode(String label, Color labelColor, Color nodeColor, Color boxColor, float mass) {
-        final Node node = this.addNode(new NodeData().label(label).labelColor(labelColor)
+    public Node addInvicibleNode(String label, String mName, Color labelColor, Color nodeColor, Color boxColor, float mass) {
+        final Node node = this.addNode(new NodeData().label(label).mName(mName).labelColor(labelColor)
                 .backgroundColor(nodeColor).boxColor(boxColor).mass(mass));
         node.getData().setIsInvicible(true);
         return node;
